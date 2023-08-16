@@ -3,6 +3,7 @@ import random
 
 tim = t.Turtle()
 t.colormode(255)
+tim.speed("fastest")
 def random_color():
     r = random.randint(0, 255)
     g = random.randint(0, 255)
@@ -19,5 +20,8 @@ def draw_spirograph(size_of_gap):
         tim.setheading(tim.heading() + size_of_gap)
 
 draw_spirograph(5)
+
+screen = t.Screen()
+screen.exitonclick()
 
 
