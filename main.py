@@ -1,18 +1,36 @@
-import turtle as t
-import random
+import turtle
+import pandas
 
-tim = t.Turtle()
+screen = turtle.Screen()
+screen.title("U.S. States Game")
+image = "blank_states_img.gif"
+screen.addshape(image)
+turtle.shape(image)
 
-########### Draw Shapes In Random Colors ########
+data = pandas.read_csv("50_states.csv")
+all_states = data.state.to_list()
+guessed_states = []
 
-colours = ["CornflowerBlue", "DarkOrchid", "IndianRed", "DeepSkyBlue", "LightSeaGreen", "wheat", "SlateGray", "SeaGreen"]
-
-def draw_shape(num_sides):
-    angle = 360 / num_sides
-    for _ in range(num_sides):
-        tim.forward(100)
-        tim.right(angle)
-
-for shape_side_n in range(3, 10):
-    tim.color(random.choice(colours))
-    draw_shape(shape_side_n)
+while len(guessed_states) < 50:
+    answer_state = screen.textinput(title=f"{len(guessed_states)}/50 States Correct",
+                                    prompt="What's another state's name?").title()
+    print(guessed_states)
+    if answer_state == "Exit":
+        missing_states = []
+        for state in all_states:
+            if state not in guessed_states:
+                missing_states.append(state)
+        # Create a pandas DataFrame with the missing states
+        new_data = pandas.DataFrame(missing_states)
+        print(new_data)
+        # Save the DataFrame to a CSV file named "states_to_learn.csv"
+        new_data.to_csv("states_to_learn.csv")
+        break
+    if answer_state in all_states:
+        guessed_states.append(answer_state)
+        t = turtle.Turtle()
+        t.hideturtle()
+        t.penup()
+        state_data = data[data.state == answer_state]
+        t.goto(int(state_data.x.iloc[0]), int(state_data.y.iloc[0]))
+        t.write(answer_state)
